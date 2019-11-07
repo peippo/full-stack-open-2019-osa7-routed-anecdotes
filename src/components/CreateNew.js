@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 
 const CreateNew = props => {
 	const [content, setContent] = useState("");
@@ -13,6 +14,7 @@ const CreateNew = props => {
 			info,
 			votes: 0
 		});
+		props.history.push("/");
 	};
 
 	return (
@@ -49,4 +51,4 @@ const CreateNew = props => {
 	);
 };
 
-export default CreateNew;
+export default withRouter(CreateNew);
