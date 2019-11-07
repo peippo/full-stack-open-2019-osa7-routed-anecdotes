@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Menu from "./components/Menu";
 import AnecdoteList from "./components/AnecdoteList";
@@ -7,8 +8,12 @@ import About from "./components/About";
 import Footer from "./components/Footer";
 import Notification from "./components/Notification";
 import CreateNew from "./components/CreateNew";
+import {
+	showNotification,
+	hideNotification
+} from "./reducers/notificationReducer";
 
-const App = () => {
+const App = ({ showNotification, hideNotification }) => {
 	const [anecdotes, setAnecdotes] = useState([
 		{
 			content: "If it hurts, do it more often",
@@ -27,15 +32,13 @@ const App = () => {
 		}
 	]);
 
-	const [notification, setNotification] = useState(null);
-
 	const addNew = anecdote => {
 		anecdote.id = (Math.random() * 10000).toFixed(0);
 		setAnecdotes(anecdotes.concat(anecdote));
-		setNotification(`A new anecdote ${anecdote.content} created!`);
+		showNotification(`A new anecdote ${anecdote.content} created!`);
 
 		setTimeout(() => {
-			setNotification(null);
+			hideNotification();
 		}, 10000);
 	};
 
@@ -56,9 +59,7 @@ const App = () => {
 		<Router>
 			<h1>Software anecdotes</h1>
 			<Menu />
-			{notification !== null && (
-				<Notification notification={notification} />
-			)}
+			<Notification />
 			<Route
 				exact
 				path="/"
@@ -80,4 +81,12 @@ const App = () => {
 	);
 };
 
-export default App;
+const mapDispatchToProps = {
+	showNotification,
+	hideNotification
+};
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(App);
